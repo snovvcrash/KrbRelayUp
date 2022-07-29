@@ -1,6 +1,10 @@
 # KrbRelayUp
 
-:exclamation: **Changes in this fork:** add `-u2u` flag which treats provided computer account as a normal **user** account for [performing](https://github.com/GhostPack/Rubeus/pull/137) [RBCD with UPNs](https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html). Only available for the `RELAY` phase (will not work with `SPAWN` or `FULL`).
+:exclamation: **Changes in this fork:**
+
+- Add `-u2u` flag which treats provided computer account as a normal **user** account for [performing](https://github.com/GhostPack/Rubeus/pull/137) [RBCD with UPNs](https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html). Only available for the `RELAY` phase (will not work with `SPAWN` or `FULL`)
+- Fix LDAP over SSL (LDAPS) handling (stolen from [#23](https://github.com/Dec0ne/KrbRelayUp/pull/23))
+- Switch to UTF-8 encoding for LDAP requests in this PR. It can potentially help non-native English AD exploitation
 
 Simple wrapper around some of the features of [Rubeus](https://github.com/GhostPack/Rubeus/) and [KrbRelay](https://github.com/cube0x0/KrbRelay) (and a few other honorable mentions in the acknowledgements section) in order to streamline the abuse of the following attack primitive:
 

